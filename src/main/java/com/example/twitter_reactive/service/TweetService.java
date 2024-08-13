@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-
 @Service
 public class TweetService {
 
@@ -34,9 +32,7 @@ public class TweetService {
         return tweetRepository.findAllByPostedBy(new ObjectId(userId));
     }
 
-    public Mono<Tweet> postTweet(Tweet tweet, String userId) {
-        tweet.setPostedBy(new ObjectId(userId));
-        tweet.setLikedBy(new ArrayList<>());
+    public Mono<Tweet> saveTweet(Tweet tweet) {
         return tweetRepository.save(tweet);
     }
 
