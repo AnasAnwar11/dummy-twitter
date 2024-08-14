@@ -7,9 +7,13 @@ import org.springframework.data.mongodb.repository.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 public interface TweetRepository extends ReactiveMongoRepository<Tweet, String> {
 
-    Flux<Tweet> findAllByPostedBy(String String);
+    Flux<Tweet> findByPostedBy(String String);
+
+    Flux<Tweet> findByLikedBy(List<String> userId);
 
     @Query("{ '_id' : ?0 }")
     @Update("{ $addToSet : { 'likedBy' : ?1 } }")

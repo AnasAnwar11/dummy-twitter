@@ -60,6 +60,11 @@ public class TweetController {
         return tweetService.unLikeTweet(tweetId, userId);
     }
 
+    @GetMapping("/tweet/liked-by/{user-id}")
+    public Flux<Tweet> getTweetsLikedByUser(@PathVariable("user-id")String userId) {
+        return tweetService.getTweetsLikedByUser(userId);
+    }
+
     @GetMapping("/tweets/by-user/{user-id}")
     public Flux<Tweet> getTweetsByUser(@PathVariable("user-id") String userId) {
         return tweetService.getTweetsByUser(userId);
