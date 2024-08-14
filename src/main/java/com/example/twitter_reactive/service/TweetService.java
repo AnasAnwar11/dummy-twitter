@@ -3,7 +3,6 @@ package com.example.twitter_reactive.service;
 import com.example.twitter_reactive.entity.Tweet;
 import com.example.twitter_reactive.entity.User;
 import com.example.twitter_reactive.repository.TweetRepository;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -25,11 +24,11 @@ public class TweetService {
     }
 
     public Mono<Tweet> getTweetById(String tweetId) {
-        return tweetRepository.findById(new ObjectId(tweetId));
+        return tweetRepository.findById(tweetId);
     }
 
     public Flux<Tweet> getTweetsByUser(String userId) {
-        return tweetRepository.findAllByPostedBy(new ObjectId(userId));
+        return tweetRepository.findAllByPostedBy(userId);
     }
 
     public Mono<Tweet> saveTweet(Tweet tweet) {
@@ -37,16 +36,16 @@ public class TweetService {
     }
 
     public Mono<Integer> likeTweet(String tweetId, String userId) {
-        return tweetRepository.updateAddLikedBy(new ObjectId(tweetId), new ObjectId(userId));
+        return tweetRepository.updateAddLikedBy(tweetId, userId);
     }
 
     public Mono<Integer> unLikeTweet(String tweetId, String userId) {
-        return tweetRepository.updateRemoveLikedBy(new ObjectId(tweetId), new ObjectId(userId));
+        return tweetRepository.updateRemoveLikedBy(tweetId, userId);
     }
 
 
     public Flux<Tweet> getTweetsPostedByFollowedUsers(String userId) { // need to move to TweetRepository
-        MatchOperation matchUser = Aggregation.match(Criteria.where("_id").is(new ObjectId(userId)));
+        MatchOperation matchUser = Aggregation.match(Criteria.where("_id").is(userId));
         LookupOperation lookupTweets = Aggregation.lookup("tweets", "follows", "postedBy", "postedByFollowedUsers");
         ProjectionOperation projectTweets = Aggregation.project("postedByFollowedUsers").andExclude("_id");
         UnwindOperation unwindTweetArray = Aggregation.unwind("postedByFollowedUsers");

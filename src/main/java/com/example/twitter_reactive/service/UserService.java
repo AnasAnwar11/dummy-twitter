@@ -2,7 +2,6 @@ package com.example.twitter_reactive.service;
 
 import com.example.twitter_reactive.entity.User;
 import com.example.twitter_reactive.repository.UserRepository;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -24,11 +23,11 @@ public class UserService {
     }
 
     public Mono<User> findUserById(String id) {
-        return userRepository.findById(new ObjectId(id));
+        return userRepository.findById(id);
     }
 
     public Flux<User> findFollowersOfUser(String userId) {  // need to move to UserRepository
-        MatchOperation matchUser = Aggregation.match(Criteria.where("_id").is(new ObjectId(userId)));
+        MatchOperation matchUser = Aggregation.match(Criteria.where("_id").is(userId));
         LookupOperation lookupFollowers = Aggregation.lookup("users", "followedBy", "_id", "followers");
         ProjectionOperation projectFollowers = Aggregation.project("followers").andExclude("_id");
         UnwindOperation unwindFollowers = Aggregation.unwind("followers");
@@ -47,7 +46,7 @@ public class UserService {
     }
 
     public Flux<User> findFollowingsOfUser(String userId) { // need to move to UserRepository
-        MatchOperation matchUser = Aggregation.match(Criteria.where("_id").is(new ObjectId(userId)));
+        MatchOperation matchUser = Aggregation.match(Criteria.where("_id").is(userId));
         LookupOperation lookupFollowedUsers = Aggregation.lookup("users", "follows", "_id", "follows");
         ProjectionOperation projectFollowedUsers = Aggregation.project("follows").andExclude("_id");
         UnwindOperation unwindFollowedUsers = Aggregation.unwind("follows");
