@@ -4,7 +4,6 @@ import com.example.twitter_reactive.entity.Tweet;
 import com.example.twitter_reactive.entity.TweetContent;
 import com.example.twitter_reactive.service.FileService;
 import com.example.twitter_reactive.service.TweetService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +31,7 @@ public class TweetController {
         return fileService.saveImage(tweetImage)
                 .map(imageId -> TweetContent.builder().text(tweetText).imageId(imageId).build())
                 .map(tweetContent ->
-                    Tweet.builder().content(tweetContent).postedBy(new ObjectId(userId)).likedBy(Collections.emptyList()).build())
+                    Tweet.builder().content(tweetContent).postedBy(userId).likedBy(Collections.emptyList()).build())
                 .flatMap(tweetService::saveTweet);
     }
 
