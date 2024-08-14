@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Service
 public class TweetService {
 
@@ -28,7 +30,11 @@ public class TweetService {
     }
 
     public Flux<Tweet> getTweetsByUser(String userId) {
-        return tweetRepository.findAllByPostedBy(userId);
+        return tweetRepository.findByPostedBy(userId);
+    }
+
+    public Flux<Tweet> getTweetsLikedByUser(String userId) {
+        return tweetRepository.findByLikedBy(List.of(userId));
     }
 
     public Mono<Tweet> saveTweet(Tweet tweet) {
@@ -42,7 +48,6 @@ public class TweetService {
     public Mono<Integer> unLikeTweet(String tweetId, String userId) {
         return tweetRepository.updateRemoveLikedBy(tweetId, userId);
     }
-
 
     public Flux<Tweet> getTweetsPostedByFollowedUsers(String userId) { // need to move to TweetRepository
         MatchOperation matchUser = Aggregation.match(Criteria.where("_id").is(userId));

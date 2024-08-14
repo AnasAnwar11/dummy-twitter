@@ -14,9 +14,8 @@ import java.util.List;
 @Document(collection = "users")
 public class User {
     private String _id;
-    private int age;
+    private String userName;
     private String email;
-    private String name;
     private List<String> follows;
     private List<String> followedBy;
 }
